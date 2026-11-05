@@ -1,497 +1,421 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { CalendarDays } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-
-import {
-    CalendarDays,
-    Clock,
-    MapPin,
-    Users,
-    UserRound,
-    Mail,
-    MessageSquare,
-    X,
-    CheckCircle2,
-    ShieldCheck,
-    Loader2,
-    ArrowRight,
-    Wallet,
-    Sparkles,
-} from "lucide-react";
-
-const initialFormState = {
-    date: "",
-    time: "10:00",
-    hours: "2",
-    guests: "1",
-    guestName: "",
-    guestEmail: "",
-    notes: "",
-};
-
-const inputClass =
-    "w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-[#A4D500] focus:bg-white focus:ring-2 focus:ring-[#C2F800]/20";
-
-const labelClass = "mb-2 block text-sm font-semibold text-gray-700";
 
 const BookingModal = ({ studio }) => {
-    const {
-        name,
-        location,
-        image,
-        hourRate = 0,
-        deposit = 0,
-        capacity,
-    } = studio ?? {};
+    const { data: session, isPending } = authClient.useSession();
+
+    const user = session?.user;
 
     const [open, setOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [confirmed, setConfirmed] = useState(false);
-    const [form, setForm] = useState(initialFormState);
+    const [hasBooked, setHasBooked] = useState(false);
 
-    const today = (() => {
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
+    const [form, setForm] = useState({
+        date: "",
+        time: "",
+        hours: "1",
+        guests: "1",
+        guestName: "",
+        guestEmail: "",
+        notes: "",
+    });
 
-        return `${year}-${month}-${day}`;
-    })();
+    // Studio ID
+    const studioId = studio?._id || studio?.id;
 
-    const hours = Math.max(1, Number(form.hours) || 1);
-    const subtotal = Number(hourRate || 0) * hours;
-    const depositAmount = Number(deposit) || 0;
-    const total = subtotal + depositAmount;
+    // User ID
+    const userId = user?.id || user?.email;
 
-    const updateField = (field, value) => {
-        setForm((prev) => ({
-            ...prev,
-            [field]: value,
-        }));
+    // User এবং Studio অনুযায়ী আলাদা booking key
+    const bookingKey =
+        userId && studioId
+            ? `studio-booked-${userId}-${studioId}`
+            : null;
+
+    // আগে বুকিং করা হয়েছে কি না চেক
+    useEffect(() => {
+        if (!bookingKey) {
+            setHasBooked(false);
+            return;
+        }
+
+        const alreadyBooked = localStorage.getItem(bookingKey);
+
+        setHasBooked(alreadyBooked === "true");
+    }, [bookingKey]);
+
+    // Booking button click
+    const handleBookClick = () => {
+        if (hasBooked) {
+            toast.error("Already Booked!");
+            return;
+        }
+
+        if (!user) {
+            toast.error("Please login to book this studio.");
+            return;
+        }
+
+        setOpen(true);
     };
 
-    const handleOpenChange = (nextOpen) => {
-        setOpen(nextOpen);
+    // Modal open এবং close
+    const handleOpenChange = (value) => {
+        setOpen(value);
 
-        if (!nextOpen) {
+        if (!value) {
             setConfirmed(false);
             setIsSubmitting(false);
-            setForm(initialFormState);
         }
     };
 
+    // Form input change
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        setForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    // Booking submit
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (hasBooked) {
+            toast.error("Already Booked!");
+            return;
+        }
+
+        if (isSubmitting) return;
+
+        if (!user) {
+            toast.error("Please login to book this studio.");
+            return;
+        }
+
+        if (!bookingKey) {
+            toast.error("Studio or user information is missing.");
+            return;
+        }
+
         setIsSubmitting(true);
 
-        // এখানে পরবর্তীতে Booking API যুক্ত করবে।
-        await new Promise((resolve) => setTimeout(resolve, 700));
+        try {
+            // Submit করার আগেও localStorage চেক
+            const alreadyBooked = localStorage.getItem(bookingKey);
 
-        setIsSubmitting(false);
-        setConfirmed(true);
+            if (alreadyBooked === "true") {
+                setHasBooked(true);
+                toast.error("Already Booked!");
+                return;
+            }
+
+            const data = {
+                ...form,
+                studioId,
+                userId: userId,
+                userName: user.name,
+                userEmail: user.email,
+            };
+
+            const res = await fetch("http://localhost:5000/booking", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await res.json();
+
+            if (!res.ok) {
+                throw new Error(result.message || "Booking failed!");
+            }
+
+            // Booking সফল হলে localStorage-এ save
+            localStorage.setItem(bookingKey, "true");
+
+            setHasBooked(true);
+            setConfirmed(true);
+
+            toast.success("Booking successful!");
+        } catch (error) {
+            console.error("Booking error:", error);
+
+            toast.error(
+                error.message || "Something went wrong!"
+            );
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
-    const formattedDate = form.date
-        ? new Date(`${form.date}T00:00:00`).toLocaleDateString("en-GB", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-        })
-        : "";
+    // Price calculation
+    const hourRate = Number(studio?.hourRate || 0);
+    const deposit = Number(studio?.deposit || 0);
+    const hours = Number(form.hours || 1);
+
+    const totalPrice = hourRate * hours + deposit;
 
     return (
-        <Dialog open={open} onOpenChange={handleOpenChange}>
-            <DialogTrigger
-                render={
-                    <Button
-                        type="button"
-                        className="h-auto w-full gap-2 rounded-xl bg-[#C2F800] px-6 py-4 text-base font-bold text-gray-900 shadow-sm transition hover:bg-[#b3e600] hover:text-gray-900"
-                    />
-                }
+        <>
+            {/* Booking Button */}
+            <Button
+                type="button"
+                onClick={handleBookClick}
+                disabled={isPending}
+                className="h-auto w-full gap-2 rounded-xl bg-[#C2F800] px-6 py-4 text-base font-bold text-gray-900 shadow-sm transition hover:bg-[#b3e600] hover:text-gray-900"
             >
                 <CalendarDays size={19} />
-                Book Workspace Now
-            </DialogTrigger>
 
-            <DialogContent className="max-h-[92vh] overflow-y-auto rounded-3xl border-0 bg-white p-0 shadow-2xl sm:max-w-xl">
+                {hasBooked
+                    ? "Already Booked"
+                    : "Book Workspace Now"}
+            </Button>
 
-                {/* Success Screen */}
-                {confirmed ? (
-                    <div className="p-6 sm:p-8">
-                        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#C2F800]/20">
-                            <CheckCircle2 size={42} className="text-[#80A900]" />
-                        </div>
+            {/* Booking Dialog */}
+            <Dialog
+                open={open}
+                onOpenChange={handleOpenChange}
+            >
+                <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
 
-                        <div className="mt-5 text-center">
-                            <p className="text-xs font-bold uppercase tracking-[2px] text-[#80A900]">
-                                Booking Submitted
-                            </p>
+                    {confirmed ? (
+                        // Booking Success Message
+                        <div className="py-8 text-center">
+                            <div className="mb-4 text-5xl">
+                                ✓
+                            </div>
 
-                            <DialogHeader className="mt-2">
-                                <DialogTitle className="text-2xl font-bold text-gray-900">
-                                    You're All Set!
+                            <DialogHeader>
+                                <DialogTitle className="text-center text-2xl">
+                                    Booking Successful!
                                 </DialogTitle>
 
-                                <DialogDescription className="mt-2 text-sm leading-6 text-gray-500">
-                                    Your booking request for{" "}
-                                    <span className="font-bold text-gray-800">{name}</span>{" "}
-                                    has been prepared successfully.
+                                <DialogDescription className="pt-2 text-center">
+                                    Your studio booking has been submitted successfully.
                                 </DialogDescription>
                             </DialogHeader>
+
+                            <Button
+                                onClick={() => handleOpenChange(false)}
+                                className="mt-6 bg-[#C2F800] font-bold text-gray-900 hover:bg-[#b3e600]"
+                            >
+                                Close
+                            </Button>
                         </div>
+                    ) : (
+                        <>
+                            <DialogHeader>
+                                <DialogTitle className="text-xl font-bold">
+                                    Book Your Workspace
+                                </DialogTitle>
 
-                        <div className="mt-7 rounded-2xl border border-gray-100 bg-gray-50 p-5">
-                            <p className="mb-4 text-sm font-bold text-gray-900">
-                                Booking Summary
-                            </p>
+                                <DialogDescription>
+                                    Complete the form below to reserve this studio.
+                                </DialogDescription>
+                            </DialogHeader>
 
-                            <div className="space-y-4 text-sm">
-                                <div className="flex items-center justify-between gap-3">
-                                    <span className="flex items-center gap-2 text-gray-500">
-                                        <CalendarDays size={16} />
-                                        Date
-                                    </span>
-                                    <span className="font-semibold text-gray-900">
-                                        {formattedDate}
-                                    </span>
-                                </div>
+                            {/* Studio Information */}
+                            <div className="rounded-xl bg-gray-100 p-4 dark:bg-gray-800">
+                                <h3 className="font-semibold">
+                                    {studio?.name}
+                                </h3>
 
-                                <div className="flex items-center justify-between gap-3">
-                                    <span className="flex items-center gap-2 text-gray-500">
-                                        <Clock size={16} />
-                                        Time & Duration
-                                    </span>
-                                    <span className="font-semibold text-gray-900">
-                                        {form.time} · {hours}h
-                                    </span>
-                                </div>
+                                <p className="text-sm text-gray-500">
+                                    {studio?.location}
+                                </p>
 
-                                <div className="flex items-center justify-between gap-3">
-                                    <span className="flex items-center gap-2 text-gray-500">
-                                        <Users size={16} />
-                                        Guests
-                                    </span>
-                                    <span className="font-semibold text-gray-900">
-                                        {form.guests} People
-                                    </span>
-                                </div>
+                                <p className="mt-2 text-sm">
+                                    Hourly Rate: ৳{hourRate}
+                                </p>
 
-                                <div className="border-t border-gray-200 pt-4">
-                                    <div className="flex items-center justify-between">
-                                        <span className="font-bold text-gray-900">
-                                            Estimated Total
-                                        </span>
-                                        <span className="text-xl font-bold text-gray-900">
-                                            ৳{total.toLocaleString("en-BD")}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <p className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-400">
-                            <ShieldCheck size={15} />
-                            Booking confirmation is not yet connected to the server.
-                        </p>
-
-                        <DialogClose
-                            render={
-                                <Button className="mt-6 h-auto w-full rounded-xl bg-[#C2F800] py-4 font-bold text-gray-900 hover:bg-[#b3e600]">
-                                    Done
-                                </Button>
-                            }
-                        />
-                    </div>
-                ) : (
-                    <>
-                        {/* Modal Header */}
-                        <div className="relative overflow-hidden bg-gray-900 px-6 py-7 text-white sm:px-8">
-                            <div className="absolute -right-10 -top-16 h-48 w-48 rounded-full bg-[#C2F800]/10 blur-2xl" />
-
-                            <div className="relative flex items-start justify-between gap-4">
-                                <div>
-                                    <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#C2F800]/15 px-3 py-1.5 text-xs font-semibold text-[#C2F800]">
-                                        <Sparkles size={14} />
-                                        RESERVE YOUR SPACE
-                                    </div>
-
-                                    <DialogHeader>
-                                        <DialogTitle className="text-2xl font-bold text-white">
-                                            Book Your Workspace
-                                        </DialogTitle>
-
-                                        <DialogDescription className="mt-2 flex items-center gap-1.5 text-sm text-gray-300">
-                                            <MapPin size={15} />
-                                            {location}
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                </div>
-
-                                <DialogClose
-                                    render={
-                                        <button
-                                            type="button"
-                                            aria-label="Close booking modal"
-                                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-                                        >
-                                            <X size={19} />
-                                        </button>
-                                    }
-                                />
-                            </div>
-
-                            {/* Studio Summary */}
-                            <div className="relative mt-6 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-3">
-                                <img
-                                    src={image || "https://placehold.co/100x100?text=Studio"}
-                                    alt={name}
-                                    className="h-16 w-16 rounded-xl object-cover"
-                                />
-
-                                <div className="min-w-0 flex-1">
-                                    <h3 className="truncate font-bold text-white">{name}</h3>
-                                    <p className="mt-1 text-xs text-gray-400">
-                                        {location}
-                                    </p>
-                                    <p className="mt-2 text-sm font-bold text-[#C2F800]">
-                                        ৳{Number(hourRate || 0).toLocaleString("en-BD")}
-                                        <span className="font-normal text-gray-300"> / hour</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Booking Form */}
-                        <form onSubmit={handleSubmit} className="space-y-6 p-6 sm:p-8">
-
-                            {/* Schedule */}
-                            <section>
-                                <div className="mb-4 flex items-center gap-3">
-                                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#C2F800]/20">
-                                        <CalendarDays size={18} />
-                                    </div>
-
-                                    <div>
-                                        <h3 className="font-bold text-gray-900">
-                                            Booking Schedule
-                                        </h3>
-                                        <p className="text-xs text-gray-400">
-                                            Choose your preferred date and time
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className={labelClass}>Booking Date *</label>
-                                        <input
-                                            type="date"
-                                            min={today}
-                                            required
-                                            value={form.date}
-                                            onChange={(e) => updateField("date", e.target.value)}
-                                            className={inputClass}
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className={labelClass}>Start Time *</label>
-                                        <input
-                                            type="time"
-                                            required
-                                            value={form.time}
-                                            onChange={(e) => updateField("time", e.target.value)}
-                                            className={inputClass}
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className={labelClass}>Duration *</label>
-                                        <select
-                                            value={form.hours}
-                                            onChange={(e) => updateField("hours", e.target.value)}
-                                            className={inputClass}
-                                        >
-                                            {Array.from({ length: 12 }, (_, i) => (
-                                                <option key={i + 1} value={String(i + 1)}>
-                                                    {i + 1} {i === 0 ? "Hour" : "Hours"}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-
-                                    <div>
-                                        <label className={labelClass}>Guests *</label>
-                                        <input
-                                            type="number"
-                                            min="1"
-                                            max={capacity || undefined}
-                                            required
-                                            value={form.guests}
-                                            onChange={(e) => updateField("guests", e.target.value)}
-                                            className={inputClass}
-                                        />
-                                        {capacity && (
-                                            <p className="mt-1 text-xs text-gray-400">
-                                                Maximum {capacity} guests
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                            </section>
-
-                            <div className="border-t border-gray-100" />
-
-                            {/* Guest Information */}
-                            <section>
-                                <div className="mb-4 flex items-center gap-3">
-                                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#C2F800]/20">
-                                        <UserRound size={18} />
-                                    </div>
-
-                                    <div>
-                                        <h3 className="font-bold text-gray-900">
-                                            Guest Information
-                                        </h3>
-                                        <p className="text-xs text-gray-400">
-                                            Enter your contact details
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className={labelClass}>Full Name *</label>
-                                        <input
-                                            type="text"
-                                            placeholder="Enter your full name"
-                                            autoComplete="name"
-                                            required
-                                            value={form.guestName}
-                                            onChange={(e) =>
-                                                updateField("guestName", e.target.value)
-                                            }
-                                            className={inputClass}
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className={labelClass}>Email Address *</label>
-                                        <input
-                                            type="email"
-                                            placeholder="you@example.com"
-                                            autoComplete="email"
-                                            required
-                                            value={form.guestEmail}
-                                            onChange={(e) =>
-                                                updateField("guestEmail", e.target.value)
-                                            }
-                                            className={inputClass}
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className={labelClass}>
-                                            Special Requests
-                                        </label>
-                                        <textarea
-                                            rows="3"
-                                            placeholder="Any equipment or setup requests?"
-                                            value={form.notes}
-                                            onChange={(e) => updateField("notes", e.target.value)}
-                                            className={`${inputClass} resize-none`}
-                                        />
-                                    </div>
-                                </div>
-                            </section>
-
-                            <div className="border-t border-gray-100" />
-
-                            {/* Price Breakdown */}
-                            <section className="rounded-2xl border border-gray-100 bg-gray-50 p-5">
-                                <div className="mb-4 flex items-center gap-2">
-                                    <Wallet size={18} className="text-gray-700" />
-                                    <h3 className="font-bold text-gray-900">
-                                        Price Breakdown
-                                    </h3>
-                                </div>
-
-                                <div className="space-y-3 text-sm">
-                                    <div className="flex items-center justify-between gap-3 text-gray-500">
-                                        <span>
-                                            ৳{Number(hourRate || 0).toLocaleString("en-BD")} × {hours}{" "}
-                                            {hours === 1 ? "hour" : "hours"}
-                                        </span>
-                                        <span className="font-semibold text-gray-800">
-                                            ৳{subtotal.toLocaleString("en-BD")}
-                                        </span>
-                                    </div>
-
-                                    <div className="flex items-center justify-between gap-3 text-gray-500">
-                                        <span>Security Deposit</span>
-                                        <span className="font-semibold text-gray-800">
-                                            ৳{depositAmount.toLocaleString("en-BD")}
-                                        </span>
-                                    </div>
-
-                                    <div className="border-t border-gray-200 pt-4">
-                                        <div className="flex items-center justify-between gap-3">
-                                            <span className="font-bold text-gray-900">
-                                                Estimated Total
-                                            </span>
-                                            <span className="text-2xl font-bold text-gray-900">
-                                                ৳{total.toLocaleString("en-BD")}
-                                            </span>
-                                        </div>
-                                        <p className="mt-1 text-xs text-gray-400">
-                                            Includes one-time security deposit
-                                        </p>
-                                    </div>
-                                </div>
-                            </section>
-
-                            {/* Submit Button */}
-                            <div className="space-y-3">
-                                <Button
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                    className="h-auto w-full gap-2 rounded-xl bg-[#C2F800] py-4 text-base font-bold text-gray-900 shadow-sm transition hover:bg-[#b3e600] hover:text-gray-900 disabled:opacity-60"
-                                >
-                                    {isSubmitting ? (
-                                        <>
-                                            <Loader2 size={19} className="animate-spin" />
-                                            Sending Request...
-                                        </>
-                                    ) : (
-                                        <>
-                                            Confirm Booking
-                                            <ArrowRight size={19} />
-                                        </>
-                                    )}
-                                </Button>
-
-                                <p className="flex items-center justify-center gap-2 text-xs text-gray-400">
-                                    <ShieldCheck size={15} />
-                                    Your booking details will be handled securely.
+                                <p className="text-sm">
+                                    Deposit: ৳{deposit}
                                 </p>
                             </div>
-                        </form>
-                    </>
-                )}
-            </DialogContent>
-        </Dialog>
+
+                            {/* Booking Form */}
+                            <form
+                                onSubmit={handleSubmit}
+                                className="space-y-4"
+                            >
+                                {/* Booking Date */}
+                                <div className="space-y-2">
+                                    <Label htmlFor="date">
+                                        Booking Date
+                                    </Label>
+
+                                    <Input
+                                        id="date"
+                                        name="date"
+                                        type="date"
+                                        value={form.date}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+
+                                {/* Starting Time */}
+                                <div className="space-y-2">
+                                    <Label htmlFor="time">
+                                        Starting Time
+                                    </Label>
+
+                                    <Input
+                                        id="time"
+                                        name="time"
+                                        type="time"
+                                        value={form.time}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+
+                                {/* Duration */}
+                                <div className="space-y-2">
+                                    <Label htmlFor="hours">
+                                        Duration (Hours)
+                                    </Label>
+
+                                    <Input
+                                        id="hours"
+                                        name="hours"
+                                        type="number"
+                                        min="1"
+                                        value={form.hours}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+
+                                {/* Guests */}
+                                <div className="space-y-2">
+                                    <Label htmlFor="guests">
+                                        Number of Guests
+                                    </Label>
+
+                                    <Input
+                                        id="guests"
+                                        name="guests"
+                                        type="number"
+                                        min="1"
+                                        max={studio?.capacity || undefined}
+                                        value={form.guests}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+
+                                {/* Guest Name */}
+                                <div className="space-y-2">
+                                    <Label htmlFor="guestName">
+                                        Your Name
+                                    </Label>
+
+                                    <Input
+                                        id="guestName"
+                                        name="guestName"
+                                        type="text"
+                                        placeholder="Enter your name"
+                                        value={form.guestName}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+
+                                {/* Guest Email */}
+                                <div className="space-y-2">
+                                    <Label htmlFor="guestEmail">
+                                        Your Email
+                                    </Label>
+
+                                    <Input
+                                        id="guestEmail"
+                                        name="guestEmail"
+                                        type="email"
+                                        placeholder="Enter your email"
+                                        value={form.guestEmail}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+
+                                {/* Additional Notes */}
+                                <div className="space-y-2">
+                                    <Label htmlFor="notes">
+                                        Additional Notes
+                                    </Label>
+
+                                    <Textarea
+                                        id="notes"
+                                        name="notes"
+                                        placeholder="Any special requirements?"
+                                        value={form.notes}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                {/* Price Breakdown */}
+                                <div className="space-y-2 rounded-xl border p-4">
+                                    <div className="flex justify-between text-sm">
+                                        <span>Hourly Rate</span>
+                                        <span>৳{hourRate}</span>
+                                    </div>
+
+                                    <div className="flex justify-between text-sm">
+                                        <span>Duration</span>
+                                        <span>{hours} Hour(s)</span>
+                                    </div>
+
+                                    <div className="flex justify-between text-sm">
+                                        <span>Deposit</span>
+                                        <span>৳{deposit}</span>
+                                    </div>
+
+                                    <div className="flex justify-between border-t pt-3 font-bold">
+                                        <span>Total Estimated Price</span>
+                                        <span>৳{totalPrice}</span>
+                                    </div>
+                                </div>
+
+                                {/* Submit Button */}
+                                <Button
+                                    type="submit"
+                                    disabled={isSubmitting || hasBooked}
+                                    className="w-full bg-[#C2F800] font-bold text-gray-900 hover:bg-[#b3e600]"
+                                >
+                                    {isSubmitting
+                                        ? "Submitting..."
+                                        : "Confirm Booking"}
+                                </Button>
+                            </form>
+                        </>
+                    )}
+                </DialogContent>
+            </Dialog>
+        </>
     );
 };
 

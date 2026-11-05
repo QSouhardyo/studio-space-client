@@ -453,9 +453,9 @@ const StudioDetailsPage = async ({ params }) => {
                     </div>
 
                     {/* Right Column */}
-                    <div className="space-y-6 lg:col-span-1">
+                    <div className="space-y-6 lg:col-span-1 lg:sticky lg:top-6 lg:self-start">
                         {/* Booking Card */}
-                        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:sticky lg:top-6">
+                        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
                             <p className="text-xs text-gray-400">
                                 Hourly Rate
                             </p>
