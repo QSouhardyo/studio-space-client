@@ -10,6 +10,7 @@ import {
     Users,
     FileText,
     PlusCircle,
+    Star,
 } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
@@ -78,6 +79,7 @@ const AddStudioPage = () => {
         form.hourRate = Number(form.hourRate);
         form.deposit = Number(form.deposit);
         form.capacity = Number(form.capacity);
+        form.rating = Number(form.rating);
 
         setIsSubmitting(true);
 
@@ -260,6 +262,49 @@ const AddStudioPage = () => {
                     </div>
                 </section>
 
+                {/* Rating */}
+                <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm md:p-7">
+                    <div className="mb-6">
+                        <h2 className="text-lg font-bold text-gray-900">
+                            Studio Rating
+                        </h2>
+
+                        <p className="mt-1 text-sm text-gray-500">
+                            Set a rating for your studio.
+                        </p>
+                    </div>
+
+                    <div>
+                        <label className={labelClass}>
+                            Rating (Out of 5) *
+                        </label>
+
+                        <div className="relative">
+                            <Star
+                                size={18}
+                                className="absolute left-4 top-1/2 -translate-y-1/2 fill-yellow-400 text-yellow-400"
+                            />
+
+                            <select
+                                name="rating"
+                                required
+                                defaultValue=""
+                                className={`${inputClass} pl-11`}
+                            >
+                                <option value="" disabled>
+                                    Select studio rating
+                                </option>
+
+                                <option value="1">1 Star</option>
+                                <option value="2">2 Stars</option>
+                                <option value="3">3 Stars</option>
+                                <option value="4">4 Stars</option>
+                                <option value="5">5 Stars</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
                 {/* Location */}
                 <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm md:p-7">
                     <div className="mb-6">
@@ -343,8 +388,8 @@ const AddStudioPage = () => {
                             <label
                                 key={amenity}
                                 className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition ${amenities.includes(amenity)
-                                    ? "border-[#A8D600] bg-[#C2F800]/10"
-                                    : "border-gray-200 hover:border-gray-300"
+                                        ? "border-[#A8D600] bg-[#C2F800]/10"
+                                        : "border-gray-200 hover:border-gray-300"
                                     }`}
                             >
                                 <input
@@ -413,7 +458,7 @@ const AddStudioPage = () => {
                             <input
                                 type="text"
                                 name="ownerName"
-                                value={user?.name}
+                                value={user?.name || ""}
                                 readOnly
                                 className={`${inputClass} bg-gray-50 text-gray-500`}
                             />
@@ -425,7 +470,7 @@ const AddStudioPage = () => {
                             <input
                                 type="email"
                                 name="ownerEmail"
-                                value={user?.email}
+                                value={user?.email || ""}
                                 readOnly
                                 className={`${inputClass} bg-gray-50 text-gray-500`}
                             />
@@ -441,7 +486,7 @@ const AddStudioPage = () => {
 
                     <button
                         type="submit"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || isPending}
                         className="flex items-center justify-center gap-2 rounded-xl bg-[#C2F800] px-7 py-3.5 text-sm font-bold text-gray-900 transition hover:bg-[#b2e500] disabled:cursor-not-allowed disabled:opacity-60"
                     >
                         <PlusCircle size={19} />

@@ -15,6 +15,7 @@ import {
 
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+import GoogleAuth from "@/components/auth/GoogleAuth";
 
 const RegisterPage = () => {
 
@@ -233,6 +234,19 @@ const RegisterPage = () => {
                         </button>
 
                     </form>
+                    {/* Divider */}
+                    <div className="my-7 flex items-center gap-4">
+                        <div className="h-px flex-1 bg-gray-200" />
+
+                        <span className="text-xs font-medium text-gray-400">
+                            OR CONTINUE WITH GOOGLE
+                        </span>
+
+                        <div className="h-px flex-1 bg-gray-200" />
+                    </div>
+                    {/* Google Login Button */}
+                    <GoogleAuth></GoogleAuth>
+
 
                     {/* Login Link */}
                     <p className="mt-7 text-center text-sm text-gray-500">
