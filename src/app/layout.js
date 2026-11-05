@@ -2,6 +2,8 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/ui/shared/Navbar";
 import { Toaster } from "sonner";
+import Footer from "@/components/ui/shared/Footer";
+import ThemeProvider from "@/components/ui/shared/ThemeProvider";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -22,9 +24,12 @@ export default function RootLayout({ children }) {
       className={`${roboto.className}  h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Navbar></Navbar>
-        {children}
-        <Toaster position="top-right" richColors />
+        <ThemeProvider>
+          <Navbar />
+          {children}
+          <Footer />
+          <Toaster position="top-right" richColors />
+        </ThemeProvider>
       </body>
     </html>
   );

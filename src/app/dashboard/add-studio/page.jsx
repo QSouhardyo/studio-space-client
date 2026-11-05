@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -40,10 +41,13 @@ const amenitiesList = [
 ];
 
 const inputClass =
-    "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-[#C2F800] focus:ring-2 focus:ring-[#C2F800]/20";
+    "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-[#C2F800] focus:ring-2 focus:ring-[#C2F800]/20 dark:border-gray-700 dark:bg-[#18251f] dark:text-gray-100 dark:placeholder:text-gray-500";
 
 const labelClass =
-    "mb-2 block text-sm font-semibold text-gray-700";
+    "mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300";
+
+const sectionClass =
+    "rounded-2xl border border-gray-100 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-[#17231d] md:p-7";
 
 const AddStudioPage = () => {
     const router = useRouter();
@@ -84,13 +88,16 @@ const AddStudioPage = () => {
         setIsSubmitting(true);
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add-studio`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(form),
-            });
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/add-studio`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(form),
+                }
+            );
 
             const result = await res.json();
 
@@ -116,18 +123,21 @@ const AddStudioPage = () => {
         <div className="mx-auto mr-5 my-10 w-full max-w-5xl space-y-6 pb-10">
 
             {/* Page Header */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
+            <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-[#17231d]">
                 <div className="flex items-center gap-3">
                     <div className="rounded-xl bg-[#C2F800]/20 p-3">
-                        <Building2 size={25} className="text-gray-900" />
+                        <Building2
+                            size={25}
+                            className="text-gray-900 dark:text-[#C2F800]"
+                        />
                     </div>
 
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                             Add New Studio
                         </h1>
 
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                             Share your creative space and start receiving bookings.
                         </p>
                     </div>
@@ -138,13 +148,13 @@ const AddStudioPage = () => {
             <form onSubmit={handleAddStudio} className="space-y-6">
 
                 {/* Basic Information */}
-                <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm md:p-7">
+                <section className={sectionClass}>
                     <div className="mb-6">
-                        <h2 className="text-lg font-bold text-gray-900">
+                        <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                             Basic Information
                         </h2>
 
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                             Provide the basic details about your studio.
                         </p>
                     </div>
@@ -206,13 +216,13 @@ const AddStudioPage = () => {
                 </section>
 
                 {/* Pricing */}
-                <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm md:p-7">
+                <section className={sectionClass}>
                     <div className="mb-6">
-                        <h2 className="text-lg font-bold text-gray-900">
+                        <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                             Pricing Information
                         </h2>
 
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                             Set your rental price and security deposit.
                         </p>
                     </div>
@@ -263,13 +273,13 @@ const AddStudioPage = () => {
                 </section>
 
                 {/* Rating */}
-                <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm md:p-7">
+                <section className={sectionClass}>
                     <div className="mb-6">
-                        <h2 className="text-lg font-bold text-gray-900">
+                        <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                             Studio Rating
                         </h2>
 
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                             Set a rating for your studio.
                         </p>
                     </div>
@@ -306,13 +316,13 @@ const AddStudioPage = () => {
                 </section>
 
                 {/* Location */}
-                <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm md:p-7">
+                <section className={sectionClass}>
                     <div className="mb-6">
-                        <h2 className="text-lg font-bold text-gray-900">
+                        <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                             Studio Location
                         </h2>
 
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                             Provide the complete address of your studio.
                         </p>
                     </div>
@@ -336,13 +346,13 @@ const AddStudioPage = () => {
                 </section>
 
                 {/* Image */}
-                <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm md:p-7">
+                <section className={sectionClass}>
                     <div className="mb-6">
-                        <h2 className="text-lg font-bold text-gray-900">
+                        <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                             Studio Image
                         </h2>
 
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                             Add an image to showcase your creative space.
                         </p>
                     </div>
@@ -366,19 +376,19 @@ const AddStudioPage = () => {
                 </section>
 
                 {/* Amenities */}
-                <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm md:p-7">
+                <section className={sectionClass}>
                     <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
                         <div>
-                            <h2 className="text-lg font-bold text-gray-900">
+                            <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                                 Studio Amenities
                             </h2>
 
-                            <p className="mt-1 text-sm text-gray-500">
+                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                 Select all available facilities.
                             </p>
                         </div>
 
-                        <span className="rounded-lg bg-[#C2F800]/20 px-3 py-1.5 text-xs font-semibold text-gray-800">
+                        <span className="rounded-lg bg-[#C2F800]/20 px-3 py-1.5 text-xs font-semibold text-gray-800 dark:text-[#C2F800]">
                             {amenities.length} Selected
                         </span>
                     </div>
@@ -388,8 +398,8 @@ const AddStudioPage = () => {
                             <label
                                 key={amenity}
                                 className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition ${amenities.includes(amenity)
-                                    ? "border-[#A8D600] bg-[#C2F800]/10"
-                                    : "border-gray-200 hover:border-gray-300"
+                                        ? "border-[#A8D600] bg-[#C2F800]/10 dark:border-[#C2F800] dark:bg-[#C2F800]/10"
+                                        : "border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-500"
                                     }`}
                             >
                                 <input
@@ -401,7 +411,7 @@ const AddStudioPage = () => {
                                     className="h-4 w-4 accent-[#A8D600]"
                                 />
 
-                                <span className="text-sm text-gray-700">
+                                <span className="text-sm text-gray-700 dark:text-gray-300">
                                     {amenity}
                                 </span>
                             </label>
@@ -410,13 +420,13 @@ const AddStudioPage = () => {
                 </section>
 
                 {/* Description */}
-                <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm md:p-7">
+                <section className={sectionClass}>
                     <div className="mb-6">
-                        <h2 className="text-lg font-bold text-gray-900">
+                        <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                             Studio Description
                         </h2>
 
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                             Tell guests what makes your studio special.
                         </p>
                     </div>
@@ -440,13 +450,13 @@ const AddStudioPage = () => {
                 </section>
 
                 {/* Owner Information */}
-                <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm md:p-7">
+                <section className={sectionClass}>
                     <div className="mb-6">
-                        <h2 className="text-lg font-bold text-gray-900">
+                        <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                             Owner Information
                         </h2>
 
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                             Your account information.
                         </p>
                     </div>
@@ -460,7 +470,7 @@ const AddStudioPage = () => {
                                 name="ownerName"
                                 value={user?.name || ""}
                                 readOnly
-                                className={`${inputClass} bg-gray-50 text-gray-500`}
+                                className={`${inputClass} bg-gray-50 text-gray-500 dark:bg-[#202f27] dark:text-gray-400`}
                             />
                         </div>
 
@@ -472,15 +482,15 @@ const AddStudioPage = () => {
                                 name="ownerEmail"
                                 value={user?.email || ""}
                                 readOnly
-                                className={`${inputClass} bg-gray-50 text-gray-500`}
+                                className={`${inputClass} bg-gray-50 text-gray-500 dark:bg-[#202f27] dark:text-gray-400`}
                             />
                         </div>
                     </div>
                 </section>
 
                 {/* Submit Button */}
-                <div className="flex flex-col-reverse gap-3 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between md:p-6">
-                    <p className="text-xs text-gray-500">
+                <div className="flex flex-col-reverse gap-3 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-[#17231d] sm:flex-row sm:items-center sm:justify-between md:p-6">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
                         Please review your information before submitting.
                     </p>
 
@@ -494,7 +504,6 @@ const AddStudioPage = () => {
                         {isSubmitting ? "Adding Studio..." : "Add Studio"}
                     </button>
                 </div>
-
             </form>
         </div>
     );

@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 
 import {
@@ -19,10 +20,8 @@ import {
   CircleHelp,
 } from "lucide-react";
 
-
 import StudioCard from "@/components/studio/StudioCard";
 import HomeSlider from "@/components/home/HomeSlider";
-
 
 // Studio Categories
 const categories = [
@@ -120,7 +119,8 @@ const Home = async () => {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/featured-studios`);
+      `${process.env.NEXT_PUBLIC_API_URL}/featured-studios`
+    );
 
     if (response.ok) {
       featuredStudios = await response.json();
@@ -130,23 +130,26 @@ const Home = async () => {
   }
 
   return (
-    <main className="overflow-hidden">
+    <main className="overflow-hidden bg-white text-gray-900 transition-colors duration-300 dark:bg-[#101c17] dark:text-white">
+
       {/* Hero Section */}
       <HomeSlider />
 
       {/* Featured Studios Section */}
       <section className="mx-auto max-w-7xl px-5 py-20 md:px-8">
+
         <div className="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+
           <div>
-            <span className="rounded-full bg-[#C2F800]/20 px-4 py-2 text-xs font-bold text-gray-800">
+            <span className="rounded-full bg-[#C2F800]/20 px-4 py-2 text-xs font-bold text-gray-800 dark:text-green-300">
               EXPLORE OUR COLLECTION
             </span>
 
-            <h2 className="mt-5 text-3xl font-extrabold text-gray-900 md:text-4xl">
+            <h2 className="mt-5 text-3xl font-extrabold text-gray-900 md:text-4xl dark:text-white">
               Featured <span className="text-[#91b900]">Studios</span>
             </h2>
 
-            <p className="mt-3 max-w-xl text-sm leading-7 text-gray-500 md:text-base">
+            <p className="mt-3 max-w-xl text-sm leading-7 text-gray-500 md:text-base dark:text-gray-400">
               Discover handpicked creative spaces designed to bring your
               ideas and projects to life.
             </p>
@@ -154,7 +157,7 @@ const Home = async () => {
 
           <Link
             href="/studios"
-            className="inline-flex items-center gap-2 text-sm font-bold text-[#235b45] transition hover:gap-3"
+            className="inline-flex items-center gap-2 text-sm font-bold text-[#235b45] transition hover:gap-3 dark:text-green-400"
           >
             Explore All Studios
             <ArrowRight size={18} />
@@ -168,14 +171,14 @@ const Home = async () => {
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-gray-300 py-16 text-center">
+          <div className="rounded-2xl border border-dashed border-gray-300 py-16 text-center dark:border-gray-700">
             <Camera className="mx-auto text-gray-400" size={40} />
 
-            <h3 className="mt-4 text-lg font-bold text-gray-800">
+            <h3 className="mt-4 text-lg font-bold text-gray-800 dark:text-white">
               No Featured Studios Yet
             </h3>
 
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
               New creative spaces will appear here soon.
             </p>
           </div>
@@ -185,9 +188,10 @@ const Home = async () => {
       {/* About Us Section */}
       <section
         id="about-us"
-        className="scroll-mt-24 border-y border-gray-100 bg-white py-20"
+        className="scroll-mt-24 border-y border-gray-100 bg-gray-50 py-20 transition-colors duration-300 dark:border-gray-800 dark:bg-[#14231c]"
       >
         <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-14 px-5 md:px-8 lg:grid-cols-2">
+
           {/* About Image */}
           <div className="relative">
             <img
@@ -209,18 +213,19 @@ const Home = async () => {
 
           {/* About Content */}
           <div className="pt-5 lg:pt-0">
-            <span className="inline-flex items-center gap-2 rounded-full bg-[#C2F800]/20 px-4 py-2 text-xs font-bold text-gray-800">
+
+            <span className="inline-flex items-center gap-2 rounded-full bg-[#C2F800]/20 px-4 py-2 text-xs font-bold text-gray-800 dark:text-green-300">
               <Sparkles size={15} />
               ABOUT STUDIOSPACE
             </span>
 
-            <h2 className="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-gray-900 md:text-5xl">
+            <h2 className="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-gray-900 md:text-5xl dark:text-white">
               A Space Where{" "}
               <span className="text-[#91b900]">Creativity</span> Comes to
               Life.
             </h2>
 
-            <p className="mt-6 text-sm leading-8 text-gray-500 md:text-base">
+            <p className="mt-6 text-sm leading-8 text-gray-500 md:text-base dark:text-gray-400">
               StudioSpace is a creative workspace sharing platform
               designed to connect talented creators with inspiring
               production spaces. Whether you are a photographer,
@@ -228,7 +233,7 @@ const Home = async () => {
               find the perfect environment to bring your ideas to life.
             </p>
 
-            <p className="mt-4 text-sm leading-8 text-gray-500 md:text-base">
+            <p className="mt-4 text-sm leading-8 text-gray-500 md:text-base dark:text-gray-400">
               We also empower studio owners to share their spaces,
               reach new audiences, and turn their unused creative
               spaces into valuable opportunities. Our goal is to make
@@ -237,25 +242,27 @@ const Home = async () => {
             </p>
 
             <div className="mt-8 grid grid-cols-2 gap-5">
+
               <div>
-                <h3 className="text-lg font-bold text-gray-900">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                   Our Mission
                 </h3>
 
-                <p className="mt-2 text-sm leading-6 text-gray-500">
+                <p className="mt-2 text-sm leading-6 text-gray-500 dark:text-gray-400">
                   Making creative spaces accessible to everyone.
                 </p>
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-gray-900">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                   Our Vision
                 </h3>
 
-                <p className="mt-2 text-sm leading-6 text-gray-500">
+                <p className="mt-2 text-sm leading-6 text-gray-500 dark:text-gray-400">
                   Building a connected community of creators.
                 </p>
               </div>
+
             </div>
 
             <Link
@@ -265,29 +272,33 @@ const Home = async () => {
               Discover Our Studios
               <ArrowRight size={18} />
             </Link>
+
           </div>
         </div>
       </section>
 
       {/* Categories Section */}
       <section className="mx-auto max-w-7xl px-5 py-20 md:px-8">
+
         <div className="text-center">
-          <span className="rounded-full bg-[#C2F800]/20 px-4 py-2 text-xs font-bold text-gray-800">
+
+          <span className="rounded-full bg-[#C2F800]/20 px-4 py-2 text-xs font-bold text-gray-800 dark:text-green-300">
             EXPLORE BY CATEGORY
           </span>
 
-          <h2 className="mt-5 text-3xl font-extrabold text-gray-900 md:text-4xl">
+          <h2 className="mt-5 text-3xl font-extrabold text-gray-900 md:text-4xl dark:text-white">
             Find Your Perfect{" "}
             <span className="text-[#91b900]">Creative Space</span>
           </h2>
 
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-gray-500 md:text-base">
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-gray-500 md:text-base dark:text-gray-400">
             From photography studios to professional recording suites,
             discover a space that matches your creative vision.
           </p>
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
           {categories.map((category) => {
             const Icon = category.icon;
 
@@ -295,21 +306,22 @@ const Home = async () => {
               <Link
                 key={category.name}
                 href={`/studios?category=${encodeURIComponent(category.name)}`}
-                className="group rounded-2xl border border-gray-100 bg-white p-7 transition duration-300 hover:-translate-y-1 hover:border-[#C2F800] hover:shadow-lg"
+                className="group rounded-2xl border border-gray-100 bg-white p-7 transition duration-300 hover:-translate-y-1 hover:border-[#C2F800] hover:shadow-lg dark:border-gray-800 dark:bg-[#1a2923] dark:hover:border-[#C2F800]"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#C2F800]/20 text-[#235b45] transition group-hover:bg-[#C2F800]">
+
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#C2F800]/20 text-[#235b45] transition group-hover:bg-[#C2F800] dark:text-green-400 group-hover:dark:text-[#235b45]">
                   <Icon size={27} />
                 </div>
 
-                <h3 className="mt-5 text-lg font-bold text-gray-900">
+                <h3 className="mt-5 text-lg font-bold text-gray-900 dark:text-white">
                   {category.name}
                 </h3>
 
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                   {category.description}
                 </p>
 
-                <div className="mt-5 flex items-center gap-2 text-sm font-bold text-[#235b45]">
+                <div className="mt-5 flex items-center gap-2 text-sm font-bold text-[#235b45] dark:text-green-400">
                   Explore Category
 
                   <ArrowRight
@@ -317,9 +329,11 @@ const Home = async () => {
                     className="transition group-hover:translate-x-1"
                   />
                 </div>
+
               </Link>
             );
           })}
+
         </div>
       </section>
 
@@ -329,7 +343,9 @@ const Home = async () => {
         className="scroll-mt-24 bg-[#172B23] py-20"
       >
         <div className="mx-auto max-w-7xl px-5 md:px-8">
+
           <div className="text-center">
+
             <span className="rounded-full bg-[#C2F800]/15 px-4 py-2 text-xs font-bold text-[#C2F800]">
               SIMPLE BOOKING PROCESS
             </span>
@@ -346,6 +362,7 @@ const Home = async () => {
           </div>
 
           <div className="mt-14 grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4">
+
             {bookingSteps.map((step, index) => {
               const Icon = step.icon;
 
@@ -354,7 +371,9 @@ const Home = async () => {
                   key={step.title}
                   className="rounded-2xl border border-white/10 bg-white/5 p-7 transition hover:-translate-y-1 hover:bg-white/10"
                 >
+
                   <div className="flex items-center justify-between">
+
                     <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#C2F800] text-[#172B23]">
                       <Icon size={26} />
                     </div>
@@ -362,6 +381,7 @@ const Home = async () => {
                     <span className="text-4xl font-extrabold text-white/10">
                       0{index + 1}
                     </span>
+
                   </div>
 
                   <h3 className="mt-7 text-lg font-bold text-white">
@@ -371,60 +391,71 @@ const Home = async () => {
                   <p className="mt-3 text-sm leading-7 text-gray-300">
                     {step.description}
                   </p>
+
                 </div>
               );
             })}
+
           </div>
         </div>
       </section>
 
       {/* Guarantees Section */}
       <section className="mx-auto max-w-7xl px-5 py-20 md:px-8">
+
         <div className="text-center">
-          <span className="rounded-full bg-[#C2F800]/20 px-4 py-2 text-xs font-bold text-gray-800">
+
+          <span className="rounded-full bg-[#C2F800]/20 px-4 py-2 text-xs font-bold text-gray-800 dark:text-green-300">
             WHY CHOOSE US
           </span>
 
-          <h2 className="mt-5 text-3xl font-extrabold text-gray-900 md:text-4xl">
+          <h2 className="mt-5 text-3xl font-extrabold text-gray-900 md:text-4xl dark:text-white">
             A Better Experience for{" "}
             <span className="text-[#91b900]">Everyone</span>
           </h2>
 
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-gray-500 md:text-base">
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-gray-500 md:text-base dark:text-gray-400">
             We make creative space sharing easier for both studio
             owners and creators.
           </p>
+
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4">
+
           {guarantees.map((item) => {
             const Icon = item.icon;
 
             return (
               <div
                 key={item.title}
-                className="rounded-2xl border border-gray-100 bg-white p-7 text-center transition hover:-translate-y-1 hover:shadow-lg"
+                className="rounded-2xl border border-gray-100 bg-white p-7 text-center transition hover:-translate-y-1 hover:shadow-lg dark:border-gray-800 dark:bg-[#1a2923]"
               >
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2F800]/20 text-[#235b45]">
+
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2F800]/20 text-[#235b45] dark:text-green-400">
                   <Icon size={30} />
                 </div>
 
-                <h3 className="mt-5 text-lg font-bold text-gray-900">
+                <h3 className="mt-5 text-lg font-bold text-gray-900 dark:text-white">
                   {item.title}
                 </h3>
 
-                <p className="mt-3 text-sm leading-7 text-gray-500">
+                <p className="mt-3 text-sm leading-7 text-gray-500 dark:text-gray-400">
                   {item.description}
                 </p>
+
               </div>
             );
           })}
+
         </div>
       </section>
 
       {/* Final CTA Section */}
       <section className="px-5 pb-20 md:px-8">
+
         <div className="mx-auto max-w-7xl overflow-hidden rounded-3xl bg-[#235b45] px-6 py-16 text-center md:px-12">
+
           <Wrench
             size={35}
             className="mx-auto text-[#C2F800]"
@@ -440,6 +471,7 @@ const Home = async () => {
           </p>
 
           <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+
             <Link
               href="/studios"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#C2F800] px-7 py-4 text-sm font-bold text-gray-900 transition hover:bg-[#b3e600]"
@@ -454,9 +486,11 @@ const Home = async () => {
             >
               List Your Studio
             </Link>
+
           </div>
         </div>
       </section>
+
     </main>
   );
 };

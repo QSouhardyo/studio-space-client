@@ -1,14 +1,5 @@
 
 import Link from "next/link";
-import {
-    Aperture,
-    ArrowRight,
-    Facebook,
-    Instagram,
-    Linkedin,
-    Youtube,
-    Mail,
-} from "lucide-react";
 
 export default function Footer() {
     return (
@@ -21,8 +12,9 @@ export default function Footer() {
                     <div>
                         <Link href="/" className="flex items-center gap-2">
                             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-[#235b45]">
-                                <Aperture size={25} />
+                                <span className="text-2xl font-bold">S</span>
                             </div>
+
                             <span className="text-xl font-bold">
                                 Studio<span className="text-green-300">Space</span>
                             </span>
@@ -34,21 +26,31 @@ export default function Footer() {
                             all in one place.
                         </p>
 
+                        {/* Social Links */}
                         <div className="mt-6 flex items-center gap-3">
-                            <a href="#" aria-label="Facebook" className="rounded-full bg-white/10 p-2.5 transition hover:bg-white hover:text-[#235b45]">
-                                <Facebook size={17} />
+                            <a href="#" aria-label="Facebook"
+                                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 font-bold transition hover:bg-white hover:text-[#235b45]">
+                                f
                             </a>
-                            <a href="#" aria-label="Instagram" className="rounded-full bg-white/10 p-2.5 transition hover:bg-white hover:text-[#235b45]">
-                                <Instagram size={17} />
+
+                            <a href="#" aria-label="Instagram"
+                                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 font-bold transition hover:bg-white hover:text-[#235b45]">
+                                ◎
                             </a>
-                            <a href="#" aria-label="X" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-lg font-bold transition hover:bg-white hover:text-[#235b45]">
+
+                            <a href="#" aria-label="X"
+                                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-lg font-bold transition hover:bg-white hover:text-[#235b45]">
                                 𝕏
                             </a>
-                            <a href="#" aria-label="LinkedIn" className="rounded-full bg-white/10 p-2.5 transition hover:bg-white hover:text-[#235b45]">
-                                <Linkedin size={17} />
+
+                            <a href="#" aria-label="LinkedIn"
+                                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 font-bold transition hover:bg-white hover:text-[#235b45]">
+                                in
                             </a>
-                            <a href="#" aria-label="YouTube" className="rounded-full bg-white/10 p-2.5 transition hover:bg-white hover:text-[#235b45]">
-                                <Youtube size={17} />
+
+                            <a href="#" aria-label="YouTube"
+                                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 font-bold transition hover:bg-white hover:text-[#235b45]">
+                                ▶
                             </a>
                         </div>
                     </div>
@@ -106,15 +108,14 @@ export default function Footer() {
                             <button
                                 type="submit"
                                 aria-label="Subscribe"
-                                className="bg-[#235b45] px-4 text-white transition hover:bg-[#194633]"
+                                className="bg-[#235b45] px-4 text-xl text-white transition hover:bg-[#194633]"
                             >
-                                <ArrowRight size={19} />
+                                →
                             </button>
                         </form>
 
                         <p className="mt-3 flex items-center gap-2 text-xs text-white/50">
-                            <Mail size={13} />
-                            Stay connected with us.
+                            ✉ Stay connected with us.
                         </p>
                     </div>
                 </div>
@@ -131,6 +132,7 @@ export default function Footer() {
                             <Link href="/terms" className="transition hover:text-green-300">
                                 Terms & Conditions
                             </Link>
+
                             <Link href="/privacy" className="transition hover:text-green-300">
                                 Privacy Policy
                             </Link>

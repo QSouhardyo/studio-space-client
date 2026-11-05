@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import StudioCard from "@/components/studio/StudioCard";
 
@@ -49,27 +50,27 @@ const ExploreStudiosPage = async ({ searchParams }) => {
     }
 
     return (
-        <main className="min-h-screen bg-[#F8F9F6]">
+        <main className="min-h-screen bg-[#F8F9F6] dark:bg-[#101a14]">
 
             {/* Page Header */}
-            <section className="border-b border-gray-100 bg-white">
+            <section className="border-b border-gray-100 bg-white dark:border-gray-800 dark:bg-[#17231d]">
                 <div className="mx-auto max-w-7xl px-5 py-12 md:px-8">
 
                     <div className="max-w-2xl">
 
-                        <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#C2F800]/20 px-4 py-2 text-xs font-bold text-gray-800">
+                        <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#C2F800]/20 px-4 py-2 text-xs font-bold text-gray-800 dark:text-[#C2F800]">
                             <Building2 size={15} />
                             EXPLORE WORKSPACES
                         </span>
 
-                        <h1 className="text-3xl font-bold tracking-tight text-gray-900 md:text-5xl">
+                        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-5xl">
                             Find Your Perfect{" "}
-                            <span className="text-[#91B900]">
+                            <span className="text-[#91B900] dark:text-[#C2F800]">
                                 Creative Space.
                             </span>
                         </h1>
 
-                        <p className="mt-4 text-sm leading-7 text-gray-500 md:text-base">
+                        <p className="mt-4 text-sm leading-7 text-gray-500 dark:text-gray-400 md:text-base">
                             Discover inspiring studios and creative workspaces.
                             Find the perfect place to bring your next big idea to life.
                         </p>
@@ -87,24 +88,24 @@ const ExploreStudiosPage = async ({ searchParams }) => {
 
                     <div>
 
-                        <h2 className="text-2xl font-bold text-gray-900">
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                             {selectedCategory === "other"
                                 ? "Other"
                                 : selectedCategory || "Explore Studios"}
                         </h2>
 
-                        <p className="mt-2 text-sm text-gray-500">
+                        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                             Discover a space that matches your creativity.
                         </p>
 
                     </div>
 
-                    <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-600">
+                    <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-600 dark:border-gray-700 dark:bg-[#17231d] dark:text-gray-300">
 
                         <Building2 size={18} />
 
                         <span>
-                            <strong className="text-gray-900">
+                            <strong className="text-gray-900 dark:text-white">
                                 {studios.length}
                             </strong>{" "}
                             Studios Available
@@ -115,7 +116,7 @@ const ExploreStudiosPage = async ({ searchParams }) => {
                 </div>
 
                 {/* Search and Filter UI */}
-                <div className="mb-8 flex flex-col gap-3 rounded-2xl border border-gray-100 bg-white p-4 sm:flex-row">
+                <div className="mb-8 flex flex-col gap-3 rounded-2xl border border-gray-100 bg-white p-4 dark:border-gray-700 dark:bg-[#17231d] sm:flex-row">
 
                     {/* Search Input */}
                     <div className="relative flex-1">
@@ -128,7 +129,7 @@ const ExploreStudiosPage = async ({ searchParams }) => {
                         <input
                             type="text"
                             placeholder="Search studios by name or location..."
-                            className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-[#C2F800] focus:bg-white focus:ring-2 focus:ring-[#C2F800]/20"
+                            className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-11 pr-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-[#C2F800] focus:bg-white focus:ring-2 focus:ring-[#C2F800]/20 dark:border-gray-700 dark:bg-[#202f27] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:bg-[#202f27]"
                         />
 
                     </div>
@@ -140,13 +141,13 @@ const ExploreStudiosPage = async ({ searchParams }) => {
 
                             <SlidersHorizontal
                                 size={17}
-                                className="text-gray-500"
+                                className="text-gray-500 dark:text-gray-400"
                             />
 
                             <select
                                 name="category"
                                 defaultValue={selectedCategory}
-                                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 outline-none focus:border-[#C2F800] sm:w-52"
+                                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 outline-none focus:border-[#C2F800] dark:border-gray-700 dark:bg-[#202f27] dark:text-gray-200 sm:w-52"
                             >
 
                                 <option value="">
@@ -181,7 +182,7 @@ const ExploreStudiosPage = async ({ searchParams }) => {
                 {selectedCategory && (
                     <div className="mb-6 flex items-center gap-3">
 
-                        <span className="rounded-full bg-[#C2F800]/20 px-4 py-2 text-sm font-semibold text-gray-800">
+                        <span className="rounded-full bg-[#C2F800]/20 px-4 py-2 text-sm font-semibold text-gray-800 dark:text-[#C2F800]">
                             Category: {selectedCategory === "other" ? "Other" : selectedCategory}
                         </span>
 
@@ -213,22 +214,22 @@ const ExploreStudiosPage = async ({ searchParams }) => {
                 ) : (
 
                     /* Empty State */
-                    <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-5 py-16 text-center">
+                    <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-5 py-16 text-center dark:border-gray-700 dark:bg-[#17231d]">
 
                         <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2F800]/20">
 
                             <Building2
                                 size={30}
-                                className="text-gray-800"
+                                className="text-gray-800 dark:text-[#C2F800]"
                             />
 
                         </div>
 
-                        <h3 className="text-xl font-bold text-gray-900">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                             No Studios Found
                         </h3>
 
-                        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
+                        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500 dark:text-gray-400">
 
                             {selectedCategory
                                 ? `No studios available in ${selectedCategory === "other" ? "Other" : selectedCategory} category.`
