@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
     Aperture,
@@ -15,6 +15,8 @@ import {
     Building2,
     CalendarDays,
     LogOut,
+    UserRound,
+    ArrowUpRight,
 } from "lucide-react";
 
 import { toast } from "sonner";
@@ -36,7 +38,7 @@ const Navbar = () => {
         { name: "Home", href: "/" },
         { name: "Explore Studios", href: "/studios" },
         { name: "How It Works", href: "/#how-it-works" },
-        { name: "About Us", href: "/about" },
+        { name: "About Us", href: "/#about-us" },
     ];
 
     const dashboardLinks = [
@@ -75,6 +77,61 @@ const Navbar = () => {
         return pathname === href || pathname.startsWith(href + "/");
     };
 
+    // Scroll to Section After Page Load
+    useEffect(() => {
+        if (pathname !== "/") return;
+
+        const id = window.location.hash.slice(1);
+
+        if (!id) return;
+
+        const timer = setTimeout(() => {
+            const section = document.getElementById(id);
+
+            if (section) {
+                section.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+            }
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [pathname]);
+
+    // Smooth Section Scrolling
+    const handleSectionClick = (id) => {
+        setMobileOpen(false);
+
+        if (pathname !== "/") {
+            window.location.href = `/#${id}`;
+            return;
+        }
+
+        const section = document.getElementById(id);
+
+        if (section) {
+            section.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+
+            window.history.replaceState(null, "", `/#${id}`);
+        }
+    };
+
+    // Navigation Click Handler
+    const handleNavClick = (e, href) => {
+        if (href.includes("#")) {
+            e.preventDefault();
+
+            const id = href.split("#")[1];
+            handleSectionClick(id);
+        } else {
+            setMobileOpen(false);
+        }
+    };
+
     // Logout
     const handleLogout = async () => {
         try {
@@ -101,69 +158,71 @@ const Navbar = () => {
     const userInitial = userName?.charAt(0)?.toUpperCase() || "U";
 
     return (
-        <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95 shadow-sm backdrop-blur-md">
-            <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
+        <header className="sticky top-0 z-50 border-b border-white/10 bg-[#235b45] shadow-[0_4px_20px_rgba(0,0,0,0.12)]">
+
+            <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 lg:px-8">
 
                 {/* Logo */}
                 <Link
                     href="/"
-                    className="flex items-center gap-2.5"
+                    className="group flex shrink-0 items-center gap-2.5"
                     onClick={() => setMobileOpen(false)}
                 >
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#235b45] text-white">
-                        <Aperture size={27} strokeWidth={2.2} />
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-[#235b45] shadow-md transition duration-300 group-hover:rotate-6 group-hover:scale-105">
+                        <Aperture size={23} strokeWidth={2.2} />
                     </div>
 
                     <div>
-                        <h1 className="text-xl font-black tracking-tight text-gray-900">
-                            Studio<span className="text-[#235b45]">Space</span>
+                        <h1 className="text-lg font-black leading-tight tracking-tight text-white sm:text-xl">
+                            Studio<span className="text-green-200">Space</span>
                         </h1>
 
-                        <p className="text-[10px] font-semibold uppercase tracking-[2px] text-gray-400">
+                        <p className="text-[8px] font-bold uppercase tracking-[1.8px] text-white/60">
                             Create without limits
                         </p>
                     </div>
                 </Link>
 
                 {/* Desktop Navigation */}
-                <div className="hidden items-center gap-8 lg:flex">
+                <div className="hidden items-center gap-1 rounded-full border border-white/10 bg-white/10 p-1 lg:flex">
+
                     {navLinks.map((link) => (
                         <Link
                             key={link.name}
                             href={link.href}
-                            className={`relative py-2 text-sm font-semibold transition ${isActive(link.href)
-                                ? "text-[#235b45]"
-                                : "text-gray-600 hover:text-[#235b45]"
-                                }`}
+                            onClick={(e) => handleNavClick(e, link.href)}
+                            className="rounded-full px-3.5 py-2 text-[12px] font-semibold text-white/85 transition-all duration-300 hover:bg-white/15 hover:text-white"
                         >
                             {link.name}
-
-                            {isActive(link.href) && (
-                                <span className="absolute -bottom-2 left-0 h-0.5 w-full rounded-full bg-[#235b45]" />
-                            )}
                         </Link>
                     ))}
+
                 </div>
 
                 {/* Desktop Auth Section */}
-                <div className="hidden items-center gap-3 lg:flex">
+                <div className="hidden items-center gap-2 lg:flex">
 
                     {isPending ? (
-                        <div className="h-10 w-28 animate-pulse rounded-xl bg-gray-100" />
+                        <div className="h-9 w-28 animate-pulse rounded-xl bg-white/20" />
                     ) : !isLoggedIn ? (
                         <>
                             <Link
                                 href="/login"
-                                className="rounded-xl px-5 py-2.5 text-sm font-bold text-gray-700 transition hover:bg-gray-100"
+                                className="rounded-lg px-4 py-2 text-sm font-bold text-white transition hover:bg-white/10"
                             >
                                 Login
                             </Link>
 
                             <Link
                                 href="/register"
-                                className="rounded-xl bg-[#235b45] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#194532]"
+                                className="group inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-[#235b45] shadow-md transition duration-300 hover:-translate-y-0.5 hover:bg-green-50 hover:shadow-lg"
                             >
                                 Register
+
+                                <ArrowUpRight
+                                    size={15}
+                                    className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                                />
                             </Link>
                         </>
                     ) : (
@@ -171,79 +230,117 @@ const Navbar = () => {
 
                             {/* User Profile Button */}
                             <button
+                                type="button"
                                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                                className="flex items-center gap-3 rounded-xl border border-gray-200 px-3 py-2 transition hover:bg-gray-50"
+                                aria-expanded={dropdownOpen}
+                                className={`flex items-center gap-2.5 rounded-xl border px-2.5 py-1.5 transition-all duration-300 ${dropdownOpen
+                                    ? "border-white/40 bg-white/20"
+                                    : "border-white/20 bg-white/10 hover:border-white/40 hover:bg-white/15"
+                                    }`}
                             >
                                 {userImage ? (
                                     <img
                                         src={userImage}
                                         alt={userName}
-                                        className="h-9 w-9 rounded-full object-cover"
+                                        className="h-8 w-8 rounded-full border-2 border-white/40 object-cover"
                                     />
                                 ) : (
-                                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#235b45] font-bold text-white">
+                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-sm font-bold text-[#235b45]">
                                         {userInitial}
                                     </div>
                                 )}
 
                                 <div className="text-left">
-                                    <p className="max-w-28 truncate text-sm font-bold text-gray-800">
+                                    <p className="max-w-28 truncate text-xs font-bold text-white">
                                         {userName}
                                     </p>
 
-                                    <p className="text-xs text-gray-400">
+                                    <p className="text-[10px] font-medium text-white/60">
                                         My Account
                                     </p>
                                 </div>
 
                                 <ChevronDown
-                                    size={16}
-                                    className={`text-gray-500 transition ${dropdownOpen ? "rotate-180" : ""
+                                    size={15}
+                                    className={`text-white/80 transition-transform duration-300 ${dropdownOpen ? "rotate-180" : ""
                                         }`}
                                 />
                             </button>
 
                             {/* Desktop Dropdown */}
                             {dropdownOpen && (
-                                <div className="absolute right-0 top-full mt-3 w-64 overflow-hidden rounded-2xl border border-gray-100 bg-white py-2 shadow-xl">
+                                <div className="absolute right-0 top-full mt-2.5 w-64 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-[0_15px_45px_rgba(0,0,0,0.18)]">
 
-                                    <div className="border-b border-gray-100 px-5 py-3">
-                                        <p className="font-bold text-gray-900">
-                                            {userName}
-                                        </p>
+                                    {/* Profile Header */}
+                                    <div className="bg-[#235b45] px-4 py-4">
+                                        <div className="flex items-center gap-3">
 
-                                        <p className="truncate text-xs text-gray-500">
-                                            {userEmail}
-                                        </p>
+                                            {userImage ? (
+                                                <img
+                                                    src={userImage}
+                                                    alt={userName}
+                                                    className="h-10 w-10 rounded-full border-2 border-white/30 object-cover"
+                                                />
+                                            ) : (
+                                                <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white/20 bg-white/15 text-base font-bold text-white">
+                                                    {userInitial}
+                                                </div>
+                                            )}
+
+                                            <div className="min-w-0 flex-1">
+                                                <p className="truncate text-sm font-bold text-white">
+                                                    {userName}
+                                                </p>
+
+                                                <p className="truncate text-[11px] text-white/70">
+                                                    {userEmail}
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div className="py-2">
+                                    {/* Dashboard Links */}
+                                    <div className="p-2">
+
+                                        <p className="px-3 py-2 text-[9px] font-bold uppercase tracking-[1.5px] text-gray-400">
+                                            Manage Workspace
+                                        </p>
+
                                         {dashboardLinks.map((link) => {
                                             const Icon = link.icon;
+                                            const active = isActive(link.href);
 
                                             return (
                                                 <Link
                                                     key={link.name}
                                                     href={link.href}
                                                     onClick={() => setDropdownOpen(false)}
-                                                    className={`flex items-center gap-3 px-5 py-3 text-sm font-medium transition ${isActive(link.href)
-                                                        ? "bg-green-50 text-[#235b45]"
+                                                    className={`group flex items-center justify-between rounded-xl px-3 py-2.5 text-xs font-medium transition-all duration-200 ${active
+                                                        ? "bg-[#235b45]/10 text-[#235b45]"
                                                         : "text-gray-600 hover:bg-gray-50 hover:text-[#235b45]"
                                                         }`}
                                                 >
-                                                    <Icon size={18} />
-                                                    {link.name}
+                                                    <span className="flex items-center gap-3">
+                                                        <Icon size={17} />
+                                                        {link.name}
+                                                    </span>
+
+                                                    {active && (
+                                                        <span className="h-1.5 w-1.5 rounded-full bg-[#235b45]" />
+                                                    )}
                                                 </Link>
                                             );
                                         })}
                                     </div>
 
-                                    <div className="border-t border-gray-100 pt-2">
+                                    {/* Logout */}
+                                    <div className="border-t border-gray-100 p-2">
                                         <button
+                                            type="button"
                                             onClick={handleLogout}
-                                            className="flex w-full items-center gap-3 px-5 py-3 text-sm font-semibold text-red-500 transition hover:bg-red-50"
+                                            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold text-red-500 transition hover:bg-red-50"
                                         >
-                                            <LogOut size={18} />
+                                            <LogOut size={17} />
                                             Logout
                                         </button>
                                     </div>
@@ -255,45 +352,52 @@ const Navbar = () => {
 
                 {/* Mobile Menu Button */}
                 <button
+                    type="button"
                     onClick={() => setMobileOpen(!mobileOpen)}
-                    className="rounded-lg p-2 text-gray-700 hover:bg-gray-100 lg:hidden"
+                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white transition hover:bg-white/20 lg:hidden"
                     aria-label="Toggle navigation menu"
+                    aria-expanded={mobileOpen}
                 >
-                    {mobileOpen ? <X size={25} /> : <Menu size={25} />}
+                    {mobileOpen ? <X size={21} /> : <Menu size={21} />}
                 </button>
             </nav>
 
             {/* Mobile Menu */}
             {mobileOpen && (
-                <div className="border-t border-gray-100 bg-white px-5 py-5 shadow-lg lg:hidden">
+                <div className="border-t border-white/10 bg-[#235b45] px-4 py-4 shadow-lg lg:hidden">
 
-                    <div className="flex flex-col gap-2">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.name}
-                                href={link.href}
-                                onClick={() => setMobileOpen(false)}
-                                className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${isActive(link.href)
-                                    ? "bg-green-50 text-[#235b45]"
-                                    : "text-gray-600 hover:bg-gray-50"
-                                    }`}
-                            >
-                                {link.name}
-                            </Link>
-                        ))}
+                    {/* Mobile Navigation */}
+                    <div>
+                        <p className="mb-2 px-2 text-[9px] font-bold uppercase tracking-[1.5px] text-white/50">
+                            Main Navigation
+                        </p>
+
+                        <div className="grid grid-cols-2 gap-2">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.name}
+                                    href={link.href}
+                                    onClick={(e) => handleNavClick(e, link.href)}
+                                    className="rounded-xl border border-white/10 bg-white/10 px-3 py-2.5 text-center text-xs font-semibold text-white transition-all hover:bg-white/20"
+                                >
+                                    {link.name}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
 
-                    <div className="my-4 border-t border-gray-100" />
+                    <div className="my-4 border-t border-white/15" />
 
                     {/* Mobile Auth Section */}
                     {isPending ? (
-                        <div className="h-12 animate-pulse rounded-xl bg-gray-100" />
+                        <div className="h-10 animate-pulse rounded-xl bg-white/20" />
                     ) : !isLoggedIn ? (
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-2 gap-2">
+
                             <Link
                                 href="/login"
                                 onClick={() => setMobileOpen(false)}
-                                className="rounded-xl border border-gray-200 py-3 text-center text-sm font-bold text-gray-700"
+                                className="rounded-xl border border-white/30 py-2.5 text-center text-xs font-bold text-white transition hover:bg-white/10"
                             >
                                 Login
                             </Link>
@@ -301,7 +405,7 @@ const Navbar = () => {
                             <Link
                                 href="/register"
                                 onClick={() => setMobileOpen(false)}
-                                className="rounded-xl bg-[#235b45] py-3 text-center text-sm font-bold text-white"
+                                className="rounded-xl bg-white py-2.5 text-center text-xs font-bold text-[#235b45] transition hover:bg-green-50"
                             >
                                 Register
                             </Link>
@@ -310,61 +414,80 @@ const Navbar = () => {
                         <div>
 
                             {/* Mobile User Information */}
-                            <div className="mb-4 flex items-center gap-3 rounded-xl bg-gray-50 p-4">
+                            <div className="mb-4 rounded-xl border border-white/15 bg-white/10 p-3">
+                                <div className="flex items-center gap-3">
 
-                                {userImage ? (
-                                    <img
-                                        src={userImage}
-                                        alt={userName}
-                                        className="h-11 w-11 rounded-full object-cover"
-                                    />
-                                ) : (
-                                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#235b45] font-bold text-white">
-                                        {userInitial}
+                                    {userImage ? (
+                                        <img
+                                            src={userImage}
+                                            alt={userName}
+                                            className="h-10 w-10 rounded-full border-2 border-white/30 object-cover"
+                                        />
+                                    ) : (
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-base font-bold text-[#235b45]">
+                                            {userInitial}
+                                        </div>
+                                    )}
+
+                                    <div className="min-w-0 flex-1">
+                                        <p className="truncate text-sm font-bold text-white">
+                                            {userName}
+                                        </p>
+
+                                        <p className="truncate text-[11px] text-white/60">
+                                            {userEmail}
+                                        </p>
+
+                                        <p className="mt-0.5 text-[9px] font-bold uppercase tracking-wider text-green-200">
+                                            StudioSpace Member
+                                        </p>
                                     </div>
-                                )}
 
-                                <div className="min-w-0">
-                                    <p className="truncate font-bold text-gray-900">
-                                        {userName}
-                                    </p>
-
-                                    <p className="truncate text-xs text-gray-500">
-                                        {userEmail}
-                                    </p>
+                                    <UserRound
+                                        size={18}
+                                        className="shrink-0 text-white/60"
+                                    />
                                 </div>
                             </div>
 
                             {/* Mobile Dashboard Links */}
-                            <div className="flex flex-col gap-1">
-                                {dashboardLinks.map((link) => {
-                                    const Icon = link.icon;
+                            <div>
+                                <p className="mb-2 px-2 text-[9px] font-bold uppercase tracking-[1.5px] text-white/50">
+                                    My Workspace
+                                </p>
 
-                                    return (
-                                        <Link
-                                            key={link.name}
-                                            href={link.href}
-                                            onClick={() => setMobileOpen(false)}
-                                            className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${isActive(link.href)
-                                                ? "bg-green-50 text-[#235b45]"
-                                                : "text-gray-600 hover:bg-gray-50 hover:text-[#235b45]"
-                                                }`}
-                                        >
-                                            <Icon size={18} />
-                                            {link.name}
-                                        </Link>
-                                    );
-                                })}
+                                <div className="grid grid-cols-2 gap-2">
+                                    {dashboardLinks.map((link) => {
+                                        const Icon = link.icon;
+                                        const active = isActive(link.href);
 
-                                {/* Mobile Logout */}
-                                <button
-                                    onClick={handleLogout}
-                                    className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-red-500 hover:bg-red-50"
-                                >
-                                    <LogOut size={18} />
-                                    Logout
-                                </button>
+                                        return (
+                                            <Link
+                                                key={link.name}
+                                                href={link.href}
+                                                onClick={() => setMobileOpen(false)}
+                                                className={`flex items-center gap-2 rounded-xl border px-2.5 py-2.5 text-[11px] font-semibold transition-all sm:text-xs ${active
+                                                    ? "border-white/40 bg-white/15 text-white"
+                                                    : "border-white/10 bg-white/10 text-white hover:bg-white/20"
+                                                    }`}
+                                            >
+                                                <Icon size={16} className="shrink-0" />
+                                                <span>{link.name}</span>
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
                             </div>
+
+                            {/* Mobile Logout */}
+                            <button
+                                type="button"
+                                onClick={handleLogout}
+                                className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-red-200/20 bg-red-500/10 py-2.5 text-xs font-semibold text-red-100 transition hover:bg-red-500/20"
+                            >
+                                <LogOut size={16} />
+                                Logout
+                            </button>
                         </div>
                     )}
                 </div>

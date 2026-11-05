@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -107,26 +106,6 @@ const HomeSlider = () => {
                     );
                 })}
             </Swiper>
-
-            <style jsx global>{`
-                .home-hero-swiper .swiper-pagination {
-                    bottom: 28px !important;
-                }
-
-                .home-hero-swiper .swiper-pagination-bullet {
-                    width: 10px;
-                    height: 10px;
-                    background: white;
-                    opacity: 0.6;
-                }
-
-                .home-hero-swiper .swiper-pagination-bullet-active {
-                    width: 28px;
-                    border-radius: 10px;
-                    background: #c2f800;
-                    opacity: 1;
-                }
-            `}</style>
         </section>
     );
 };

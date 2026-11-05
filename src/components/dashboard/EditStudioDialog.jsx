@@ -80,7 +80,7 @@ const EditStudioDialog = ({ listing }) => {
 
         try {
             const res = await fetch(
-                `http://localhost:5000/studios/edit/${listing._id}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/studios/edit/${listing._id}`,
                 {
                     method: "PATCH",
                     headers: {
@@ -117,7 +117,7 @@ const EditStudioDialog = ({ listing }) => {
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
             {/* আগের Pencil Icon */}
-            <DialogTrigger asChild>
+            <DialogTrigger>
                 <Button
                     variant="ghost"
                     size="icon"

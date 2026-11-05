@@ -23,7 +23,7 @@ const MyBookingsPage = async () => {
     // User এর booking গুলো আনা
     try {
         const res = await fetch(
-            `http://localhost:5000/my-bookings/${user.email}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/my-bookings/${user.email}`,
             {
                 cache: "no-store",
             }
@@ -39,7 +39,7 @@ const MyBookingsPage = async () => {
 
     // Booking গুলোর studio তথ্য (image, name, location, price) আনা
     try {
-        const res = await fetch("http://localhost:5000/studios", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/studios`, {
             cache: "no-store",
         });
 

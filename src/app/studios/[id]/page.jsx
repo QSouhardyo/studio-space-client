@@ -108,7 +108,7 @@ const StudioDetailsPage = async ({ params }) => {
     let studio = null;
 
     try {
-        const res = await fetch(`http://localhost:5000/studios/${id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/studios/${id}`, {
             cache: "no-store",
         });
 

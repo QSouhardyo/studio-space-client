@@ -22,7 +22,7 @@ const MyListingsPage = async () => {
 
     try {
         const res = await fetch(
-            `http://localhost:5000/my-listings/${user.email}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/my-listings/${user.email}`,
             {
                 cache: "no-store",
             }

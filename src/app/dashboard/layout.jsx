@@ -4,7 +4,7 @@ import { Toaster } from 'sonner';
 
 const layout = ({ children }) => {
     return (
-        <div className='flex gap-6'>
+        <div className='flex flex-col-reverse gap-6 lg:flex-row'>
             <Sidebar></Sidebar>
             <div className='flex-1'>
                 {children}

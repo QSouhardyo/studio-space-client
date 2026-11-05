@@ -27,7 +27,7 @@ const ExploreStudiosPage = async ({ searchParams }) => {
     let studios = [];
 
     try {
-        const res = await fetch("http://localhost:5000/studios", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/studios`, {
             cache: "no-store",
         });
 

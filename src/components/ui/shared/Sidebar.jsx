@@ -9,6 +9,9 @@ import {
     Building2,
     CalendarDays,
     Aperture,
+    ArrowUpRight,
+    Sparkles,
+    LayoutDashboard,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -19,16 +22,19 @@ export default function Sidebar() {
             name: "Add New Studio",
             href: "/dashboard/add-studio",
             icon: PlusCircle,
+            description: "Create a studio listing",
         },
         {
             name: "My Studio Listings",
             href: "/dashboard/my-listings",
             icon: Building2,
+            description: "Manage your studios",
         },
         {
             name: "My Bookings",
             href: "/dashboard/my-bookings",
             icon: CalendarDays,
+            description: "Track your reservations",
         },
     ];
 
@@ -37,33 +43,26 @@ export default function Sidebar() {
     }
 
     return (
-        <aside className="w-full rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:min-h-[calc(100vh-120px)] lg:w-72">
+        <aside className="w-full overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-[0_8px_35px_rgba(0,0,0,0.05)] lg:min-h-[calc(100vh-120px)] lg:w-72">
 
-            {/* Sidebar Header */}
-            {/* <div className="mb-7 flex items-center gap-3 border-b border-gray-100 pb-5">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#235b45] text-white">
-                    <Aperture size={25} />
-                </div>
 
-                <div>
-                    <h2 className="font-bold text-gray-900">
-                        StudioSpace
-                    </h2>
-
-                    <p className="text-xs text-gray-400">
-                        Dashboard Menu
-                    </p>
-                </div>
-            </div> */}
 
             {/* Navigation */}
-            <div>
-                <p className="mb-3 px-3 text-xs font-bold uppercase tracking-wider text-gray-400">
-                    Workspace
-                </p>
+            <div className="p-3 sm:p-4 lg:p-5">
 
-                <nav className="flex flex-col gap-2">
-                    {menuItems.map((item) => {
+                <div className="mb-3 hidden items-center justify-between px-2 lg:flex">
+                    <p className="text-[10px] font-extrabold uppercase tracking-[1.5px] text-gray-400">
+                        Menu
+                    </p>
+
+                    <span className="rounded-md bg-green-50 px-2 py-1 text-[9px] font-bold text-[#235b45]">
+                        03 ITEMS
+                    </span>
+                </div>
+
+                <nav className="flex flex-row gap-2 lg:flex-col">
+
+                    {menuItems.map((item, index) => {
                         const Icon = item.icon;
                         const active = isActive(item.href);
 
@@ -71,30 +70,68 @@ export default function Sidebar() {
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${active
-                                    ? "bg-[#235b45] text-white shadow-md shadow-green-900/10"
-                                    : "text-gray-600 hover:bg-green-50 hover:text-[#235b45]"
+                                className={`group relative flex min-w-0 flex-1 flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl border px-2 py-3 text-center transition-all duration-300 sm:flex-row sm:justify-start sm:gap-3 sm:px-3 lg:px-3.5 lg:py-3.5 ${active
+                                    ? "border-[#235b45] bg-gradient-to-r from-[#235b45] to-[#34765b] text-white shadow-[0_6px_18px_rgba(35,91,69,0.22)]"
+                                    : "border-gray-100 bg-white text-gray-600 hover:-translate-y-0.5 hover:border-green-200 hover:bg-green-50/70 hover:shadow-md"
                                     }`}
                             >
-                                <Icon size={19} />
 
-                                <span>{item.name}</span>
+                                {/* Active Background Decoration */}
+                                {active && (
+                                    <>
+                                        <span className="absolute -right-5 -top-7 h-20 w-20 rounded-full bg-white/5" />
+                                        <span className="absolute bottom-0 left-0 top-0 hidden w-1 rounded-r-full bg-green-200 lg:block" />
+                                    </>
+                                )}
+
+                                {/* Icon */}
+                                <div
+                                    className={`relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-all duration-300 ${active
+                                        ? "bg-white/15 text-white shadow-inner"
+                                        : "bg-green-50 text-[#235b45] group-hover:scale-110 group-hover:bg-[#235b45] group-hover:text-white"
+                                        }`}
+                                >
+                                    <Icon size={20} strokeWidth={2} />
+                                </div>
+
+                                {/* Text */}
+                                <div className="relative z-10 min-w-0 flex-1 sm:text-left">
+                                    <p className={`text-[10px] font-bold leading-tight sm:text-xs lg:text-[13px] ${active ? "text-white" : "text-gray-700 group-hover:text-[#235b45]"
+                                        }`}>
+                                        {item.name}
+                                    </p>
+
+                                    <p className={`mt-1 hidden text-[10px] leading-tight lg:block ${active ? "text-green-100/70" : "text-gray-400"
+                                        }`}>
+                                        {item.description}
+                                    </p>
+                                </div>
+
+                                {/* Active Badge / Arrow */}
+                                <div className="relative z-10 hidden sm:block">
+                                    {active ? (
+                                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/15">
+                                            <ArrowUpRight size={14} className="text-white" />
+                                        </span>
+                                    ) : (
+                                        <ArrowUpRight
+                                            size={15}
+                                            className="text-gray-300 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#235b45]"
+                                        />
+                                    )}
+                                </div>
+
                             </Link>
                         );
                     })}
+
                 </nav>
+
+
+
+
+
             </div>
-
-            {/* Sidebar Footer */}
-            {/* <div className="mt-10 rounded-xl bg-[#F4F7F5] p-4">
-                <p className="text-sm font-bold text-[#235b45]">
-                    Create Something Amazing!
-                </p>
-
-                <p className="mt-2 text-xs leading-5 text-gray-500">
-                    Manage your creative spaces and bookings from one place.
-                </p>
-            </div> */}
         </aside>
     );
 }

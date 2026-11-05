@@ -84,7 +84,7 @@ const AddStudioPage = () => {
         setIsSubmitting(true);
 
         try {
-            const res = await fetch("http://localhost:5000/add-studio", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add-studio`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -388,8 +388,8 @@ const AddStudioPage = () => {
                             <label
                                 key={amenity}
                                 className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition ${amenities.includes(amenity)
-                                        ? "border-[#A8D600] bg-[#C2F800]/10"
-                                        : "border-gray-200 hover:border-gray-300"
+                                    ? "border-[#A8D600] bg-[#C2F800]/10"
+                                    : "border-gray-200 hover:border-gray-300"
                                     }`}
                             >
                                 <input
