@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -24,25 +25,25 @@ const STATUS_STYLES = {
     confirmed: {
         label: "Confirmed",
         icon: CircleCheck,
-        className: "bg-green-50 text-green-600",
+        className: "bg-green-50 text-green-600 dark:bg-green-500/10 dark:text-green-400",
     },
 
     pending: {
         label: "Pending",
         icon: Clock,
-        className: "bg-amber-50 text-amber-600",
+        className: "bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400",
     },
 
     cancelled: {
         label: "Cancelled",
         icon: CircleX,
-        className: "bg-rose-50 text-rose-600",
+        className: "bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400",
     },
 
     completed: {
         label: "Completed",
         icon: CircleCheck,
-        className: "bg-blue-50 text-blue-600",
+        className: "bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400",
     },
 };
 
@@ -57,7 +58,7 @@ const getStatusStyle = (status) => {
         STATUS_STYLES[normalizedKey] || {
             label: status || "Pending",
             icon: CircleCheck,
-            className: "bg-gray-100 text-gray-600",
+            className: "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300",
         }
     );
 };
@@ -161,17 +162,16 @@ const MyBookingsCard = ({ bookings = [] }) => {
 
 
     return (
-        <div className="min-h-screen bg-[#FAFAFA] px-4 py-8 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-[#FAFAFA] px-4 py-8 dark:bg-[#101a14] sm:px-6 lg:px-8">
 
             <div className="mx-auto max-w-5xl">
-
 
                 {/* Header */}
                 <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
 
                     <div>
 
-                        <span className="inline-flex items-center gap-2 rounded-full bg-[#235b45]/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#235b45]">
+                        <span className="inline-flex items-center gap-2 rounded-full bg-[#235b45]/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#235b45] dark:bg-[#C2F800]/10 dark:text-[#C2F800]">
 
                             <CalendarDays size={15} />
 
@@ -179,13 +179,13 @@ const MyBookingsCard = ({ bookings = [] }) => {
 
                         </span>
 
-                        <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
+                        <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl">
 
                             My Studio Bookings
 
                         </h1>
 
-                        <p className="mt-2 text-sm text-gray-500">
+                        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
 
                             Track reservation statuses, cancellation requests, and shoot times
 
@@ -196,7 +196,7 @@ const MyBookingsCard = ({ bookings = [] }) => {
 
                     <Link
                         href="/studios"
-                        className="inline-flex shrink-0 items-center gap-2 self-start rounded-xl bg-[#235b45] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#1b4836]"
+                        className="inline-flex shrink-0 items-center gap-2 self-start rounded-xl bg-[#235b45] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#1b4836] dark:bg-[#34765b] dark:hover:bg-[#235b45]"
                     >
 
                         Explore More Studios
@@ -211,21 +211,21 @@ const MyBookingsCard = ({ bookings = [] }) => {
                 {/* Empty State */}
                 {bookingList.length === 0 ? (
 
-                    <div className="rounded-2xl border border-dashed border-[#235b45]/20 bg-white px-5 py-16 text-center">
+                    <div className="rounded-2xl border border-dashed border-[#235b45]/20 bg-white px-5 py-16 text-center dark:border-[#34765b]/40 dark:bg-[#17231d]">
 
-                        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#235b45]/10 text-[#235b45]">
+                        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#235b45]/10 text-[#235b45] dark:bg-[#263d2e] dark:text-[#C2F800]">
 
                             <CalendarDays size={30} />
 
                         </div>
 
-                        <h2 className="text-xl font-bold text-gray-900">
+                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">
 
                             No Bookings Yet
 
                         </h2>
 
-                        <p className="mx-auto mt-2 max-w-md text-sm text-gray-500">
+                        <p className="mx-auto mt-2 max-w-md text-sm text-gray-500 dark:text-gray-400">
 
                             You have not booked any studios yet. Explore our
                             workspaces and reserve your first shoot.
@@ -234,7 +234,7 @@ const MyBookingsCard = ({ bookings = [] }) => {
 
                         <Link
                             href="/studios"
-                            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#235b45] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#1b4836]"
+                            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#235b45] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#1b4836] dark:bg-[#34765b] dark:hover:bg-[#235b45]"
                         >
 
                             Explore More Studios
@@ -282,11 +282,10 @@ const MyBookingsCard = ({ bookings = [] }) => {
 
                                 <div
                                     key={booking._id || shortId}
-                                    className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5"
+                                    className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition dark:border-[#293b30] dark:bg-[#17231d] sm:p-5"
                                 >
 
                                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-
 
                                         {/* Studio Image */}
                                         <img
@@ -302,7 +301,6 @@ const MyBookingsCard = ({ bookings = [] }) => {
                                         {/* Booking Information */}
                                         <div className="min-w-0 flex-1">
 
-
                                             {/* Status + Booking ID */}
                                             <div className="flex flex-wrap items-center gap-2.5">
 
@@ -316,7 +314,7 @@ const MyBookingsCard = ({ bookings = [] }) => {
 
                                                 </span>
 
-                                                <span className="text-xs text-gray-400">
+                                                <span className="text-xs text-gray-400 dark:text-gray-500">
 
                                                     ID: #{shortId}
 
@@ -326,7 +324,7 @@ const MyBookingsCard = ({ bookings = [] }) => {
 
 
                                             {/* Studio Name */}
-                                            <h2 className="mt-2.5 text-lg font-bold text-gray-900">
+                                            <h2 className="mt-2.5 text-lg font-bold text-gray-900 dark:text-white">
 
                                                 {studio?.name || "Studio Booking"}
 
@@ -334,26 +332,26 @@ const MyBookingsCard = ({ bookings = [] }) => {
 
 
                                             {/* Date + Time */}
-                                            <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-gray-600">
+                                            <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-gray-600 dark:text-gray-300">
 
                                                 <span className="inline-flex items-center gap-1.5">
 
                                                     <CalendarDays
                                                         size={15}
-                                                        className="shrink-0 text-[#235b45]"
+                                                        className="shrink-0 text-[#235b45] dark:text-[#C2F800]"
                                                     />
 
                                                     {booking.date || "N/A"}
 
                                                 </span>
 
-                                                <span className="h-1 w-1 rounded-full bg-gray-300" />
+                                                <span className="h-1 w-1 rounded-full bg-gray-300 dark:bg-gray-600" />
 
                                                 <span className="inline-flex items-center gap-1.5">
 
                                                     <Clock
                                                         size={15}
-                                                        className="shrink-0 text-[#235b45]"
+                                                        className="shrink-0 text-[#235b45] dark:text-[#C2F800]"
                                                     />
 
                                                     {timeLabel}
@@ -364,11 +362,11 @@ const MyBookingsCard = ({ bookings = [] }) => {
 
 
                                             {/* Location */}
-                                            <div className="mt-2 flex items-center gap-1.5 text-sm text-gray-500">
+                                            <div className="mt-2 flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
 
                                                 <MapPin
                                                     size={15}
-                                                    className="shrink-0 text-gray-400"
+                                                    className="shrink-0 text-gray-400 dark:text-gray-500"
                                                 />
 
                                                 <span className="truncate">
@@ -385,17 +383,16 @@ const MyBookingsCard = ({ bookings = [] }) => {
                                         {/* Total + Cancel Button */}
                                         <div className="flex flex-row items-center justify-between gap-3 sm:w-44 sm:flex-col sm:items-end sm:justify-start">
 
-
                                             {/* Total Price */}
                                             <div className="sm:text-right">
 
-                                                <p className="text-xs text-gray-400">
+                                                <p className="text-xs text-gray-400 dark:text-gray-500">
 
                                                     Total Charged / Due
 
                                                 </p>
 
-                                                <p className="mt-1 text-2xl font-bold text-[#235b45]">
+                                                <p className="mt-1 text-2xl font-bold text-[#235b45] dark:text-[#C2F800]">
 
                                                     ${formatMoney(booking.total)}
 
@@ -411,7 +408,7 @@ const MyBookingsCard = ({ bookings = [] }) => {
                                                     type="button"
                                                     disabled={cancellingId === bookingId}
                                                     onClick={() => handleCancelBooking(bookingId)}
-                                                    className="inline-flex items-center gap-2 rounded-lg bg-rose-50 px-4 py-2.5 text-sm font-semibold text-rose-600 transition hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-50"
+                                                    className="inline-flex items-center gap-2 rounded-lg bg-rose-50 px-4 py-2.5 text-sm font-semibold text-rose-600 transition hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20"
                                                 >
 
                                                     <XCircle size={16} />
