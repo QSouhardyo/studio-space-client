@@ -3,7 +3,7 @@ import * as React from "react"
 import { loadHighlighter } from "@/lib/highlighter"
 
 export function useHighlightedCode(value, language) {
-  // A trailing newline would render as an  
+  // A trailing newline would render   
   const code = value.endsWith("\n") ? value.slice(0, -1) : value
   const [loaded, setLoaded] = React.useState(null)
   const highlighter = loaded?.language === language ? loaded.highlighter : null
