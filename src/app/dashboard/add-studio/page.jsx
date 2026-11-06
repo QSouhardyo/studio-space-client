@@ -94,6 +94,7 @@ const AddStudioPage = () => {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        authorization: 'user logged in'
                     },
                     body: JSON.stringify(form),
                 }
@@ -398,8 +399,8 @@ const AddStudioPage = () => {
                             <label
                                 key={amenity}
                                 className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition ${amenities.includes(amenity)
-                                        ? "border-[#A8D600] bg-[#C2F800]/10 dark:border-[#C2F800] dark:bg-[#C2F800]/10"
-                                        : "border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-500"
+                                    ? "border-[#A8D600] bg-[#C2F800]/10 dark:border-[#C2F800] dark:bg-[#C2F800]/10"
+                                    : "border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-500"
                                     }`}
                             >
                                 <input
