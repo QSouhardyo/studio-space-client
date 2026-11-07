@@ -18,27 +18,40 @@ import { Button } from '../ui/button';
 import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { authClient } from '@/lib/auth-client';
 
 const DeleteStudioDialog = ({ listing }) => {
     const router = useRouter();
 
     const handleDelete = async () => {
         try {
+            const { data, error } = await authClient.token();
+
+            if (error || !data?.token) {
+                toast.error("Failed to get authentication token!");
+                return;
+            }
+
+            const jwtToken = data?.token;
+
             const res = await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/my-listings/${listing._id}`,
                 {
-                    method: 'DELETE'
+                    method: 'DELETE',
+                    headers: {
+                        authorization: `Bearer ${jwtToken}`
+                    }
                 }
             );
 
-            const data = await res.json();
+            const dataDelete = await res.json();
 
             if (res.ok) {
                 toast.success('Studio deleted successfully!');
                 router.push('/dashboard/my-listings');
                 router.refresh();
             } else {
-                toast.error(data.message || 'Failed to delete studio!');
+                toast.error(dataDelete.message || 'Failed to delete studio!');
             }
 
         } catch (error) {

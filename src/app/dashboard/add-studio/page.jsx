@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -70,6 +69,67 @@ const AddStudioPage = () => {
         }
     };
 
+    // const handleAddStudio = async (e) => {
+    //     e.preventDefault();
+
+    //     const formElement = e.currentTarget;
+
+    //     const formData = new FormData(formElement);
+    //     const form = Object.fromEntries(formData.entries());
+
+    //     form.amenities = formData.getAll("amenities");
+
+    //     form.hourRate = Number(form.hourRate);
+    //     form.deposit = Number(form.deposit);
+    //     form.capacity = Number(form.capacity);
+    //     form.rating = Number(form.rating);
+
+    //     setIsSubmitting(true);
+
+    //     // retrive client token
+    //     const { data, error } = await authClient.token()
+    //     if (error) {
+    //         // handle error
+    //     }
+    //     if (data) {
+    //         const jwtToken = data?.token
+    //         // Use this token for authenticated requests to external services
+    //     }
+
+    //     try {
+    //         const res = await fetch(
+    //             `${process.env.NEXT_PUBLIC_API_URL}/add-studio`,
+    //             {
+    //                 method: "POST",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                     authorization: `Bearer ${jwtToken}`
+    //                 },
+    //                 body: JSON.stringify(form),
+    //             }
+    //         );
+
+    //         const result = await res.json();
+
+    //         if (res.ok) {
+    //             toast.success("Studio added successfully!");
+
+    //             formElement.reset();
+    //             setAmenities([]);
+
+    //             router.refresh();
+    //         } else {
+    //             toast.error(result.message || "Failed to add studio!");
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //         toast.error("Something went wrong!");
+    //     } finally {
+    //         setIsSubmitting(false);
+    //     }
+    // };
+
+
     const handleAddStudio = async (e) => {
         e.preventDefault();
 
@@ -88,13 +148,24 @@ const AddStudioPage = () => {
         setIsSubmitting(true);
 
         try {
+            // Client থেকে JWT Token সংগ্রহ
+            const { data, error } = await authClient.token();
+
+            if (error || !data?.token) {
+                toast.error("Failed to get authentication token!");
+                return;
+            }
+
+            const jwtToken = data?.token;
+
+            // Backend API তে Data পাঠানো
             const res = await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/add-studio`,
                 {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        authorization: 'user logged in'
+                        authorization: `Bearer ${jwtToken}`,
                     },
                     body: JSON.stringify(form),
                 }
@@ -110,15 +181,18 @@ const AddStudioPage = () => {
 
                 router.refresh();
             } else {
-                toast.error(result.message || "Failed to add studio!");
+                toast.error(result.message || result.msg || "Failed to add studio!");
             }
+
         } catch (error) {
-            console.log(error);
+            console.log("Add Studio Error:", error);
             toast.error("Something went wrong!");
+
         } finally {
             setIsSubmitting(false);
         }
     };
+
 
     return (
         <div className="mx-auto mr-5 my-10 w-full max-w-5xl space-y-6 pb-10">
