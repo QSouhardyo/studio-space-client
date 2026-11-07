@@ -173,7 +173,17 @@ const BookingModal = ({ studio }) => {
         setIsSubmitting(true);
 
         try {
-            const data = {
+            // Client থেকে JWT Token সংগ্রহ
+            const { data, error } = await authClient.token();
+
+            if (error || !data?.token) {
+                toast.error("Failed to get authentication token!");
+                return;
+            }
+
+            const jwtToken = data?.token;
+
+            const bookingData = {
                 ...form,
                 studioId: studioId,
                 userId: user.id || user.email,
@@ -185,8 +195,9 @@ const BookingModal = ({ studio }) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    authorization: `Bearer ${jwtToken}`
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify(bookingData),
             });
 
             const result = await res.json();
